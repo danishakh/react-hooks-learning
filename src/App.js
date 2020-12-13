@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Form from "./components/Form";
+import PeopleList from "./components/PeopleList";
+import NewestPerson from "./components/NewestPerson";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+	// lets create a form that lets you add people, and display the list of people
+
+	// usState() will return us an array of 2 things - 1st: the current state of 'people' and 2nd: function to update the state
+	const [people, setPeople] = useState([
+		{
+			firstName: "Harry",
+			lastName: "Potter",
+		},
+		{
+			firstName: "Morgan",
+			lastName: "Pierce",
+		},
+	]);
+
+	// we have to spread the people that were in state from before bec useState does not merge, it just overwrites
+	const addPerson = (newPerson) => {
+		setPeople([...people, newPerson]);
+	};
+
+	return (
+		<div className="container mt-4">
+			<div className="row">
+				<Form addPerson={addPerson} />
+				<PeopleList people={people} />
+				<NewestPerson newestPerson={people[people.length - 1]} />
+			</div>
+		</div>
+	);
+};
 
 export default App;
