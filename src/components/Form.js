@@ -9,6 +9,8 @@ const Form = (props) => {
 
 	const submitHandler = (e) => {
 		e.preventDefault();
+
+		// basic validation...
 		if (person.firstName.trim() === "" || person.lastName.trim() === "") return;
 
 		const newPerson = {

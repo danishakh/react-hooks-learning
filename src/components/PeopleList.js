@@ -7,7 +7,7 @@ const PeopleList = (props) => {
 			<hr />
 
 			{props.people.map((p) => (
-				<div key={Math.random * 1000000}>
+				<div key={Math.random() * 1000000}>
 					<p>
 						{p.firstName} {p.lastName}
 					</p>

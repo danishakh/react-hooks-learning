@@ -6,8 +6,13 @@ const NewestPerson = ({ newestPerson }) => {
 	useEffect(() => {
 		const newestPersonName = `${newestPerson.firstName} ${newestPerson.lastName}`;
 		document.title = newestPersonName;
-		console.log("useEffect triggered!");
-	});
+		console.log("useEffect triggered!"); // runs on componentDidMount, componentDidUpdate
+
+		// also runs on componentDidUnmount by the return function below
+		return () => {
+			console.log("useEffect triggered on unmount");
+		};
+	}, [newestPerson]); // dependencies, which takes an array of variables that we want to watch - if we pass '[]' then useEffect will only run on mount - if we pass [newestPerson] then it will only run everytime newestPerson changes
 
 	return (
 		<div className="col-sm-12">
