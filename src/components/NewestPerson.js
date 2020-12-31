@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
+import PeopleCount from "./PeopleCount";
 
 // useEffect example to show the latest addition to the people list
 
-const NewestPerson = ({ newestPerson }) => {
+const NewestPerson = ({ newestPerson, peopleCount }) => {
 	useEffect(() => {
 		const newestPersonName = `${newestPerson.firstName} ${newestPerson.lastName}`;
 		document.title = newestPersonName;
@@ -20,6 +21,7 @@ const NewestPerson = ({ newestPerson }) => {
 				Latest Addition:{" "}
 				{`${newestPerson.firstName} ${newestPerson.lastName} was just added to the list!`}
 			</h2>
+			<PeopleCount peopleCount={peopleCount} />
 		</div>
 	);
 };
