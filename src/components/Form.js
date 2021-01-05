@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import PeopleContext from "../context/peopleContext";
 
-const Form = (props) => {
+const Form = () => {
 	const [person, setPerson] = useState({ firstName: "", lastName: "" });
+	const context = useContext(PeopleContext);
 
 	const changeHandler = (e) => {
 		setPerson({ ...person, [e.target.name]: e.target.value });
@@ -19,7 +21,7 @@ const Form = (props) => {
 		};
 
 		// use the addPerson() function defined in App.js that does the call to setPerson()
-		props.addPerson(newPerson);
+		context.addPerson(newPerson);
 
 		// reset the form
 		setPerson({ firstName: "", lastName: "" });

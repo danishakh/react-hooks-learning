@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import Form from "./components/Form";
 import PeopleList from "./components/PeopleList";
 import NewestPerson from "./components/NewestPerson";
+
+import PeopleContext from "./context/peopleContext";
+import peopleReducer from "./context/peopleReducer";
+import { ADD_PERSON } from "./context/types";
 
 const App = () => {
 	// ====================================
@@ -9,33 +13,44 @@ const App = () => {
 	// ====================================
 
 	// usState() will return us an array of 2 things - 1st: the current state of 'people' and 2nd: function to update the state
-	const [people, setPeople] = useState([
-		{
-			firstName: "Harry",
-			lastName: "Potter",
-		},
-		{
-			firstName: "Morgan",
-			lastName: "Pierce",
-		},
-	]);
+	const initialState = {
+		people: [
+			{
+				firstName: "Harry",
+				lastName: "Potter",
+			},
+			{
+				firstName: "Morgan",
+				lastName: "Pierce",
+			},
+		],
+	};
 
-	// we have to spread the people that were in state from before bec useState does not merge, it just overwrites
+	const [state, dispatch] = useReducer(peopleReducer, initialState);
+
+	// we will call this when we want to add a new person to the list, and this will be passed down using the context. The peopleReducer will catch this action and call the appropriate action and update our state
 	const addPerson = (newPerson) => {
-		setPeople([...people, newPerson]);
+		dispatch({
+			type: ADD_PERSON,
+			payload: newPerson,
+		});
 	};
 
 	return (
-		<div className="container mt-4">
-			<div className="row">
-				<Form addPerson={addPerson} />
-				<PeopleList people={people} />
-				<NewestPerson
-					newestPerson={people[people.length - 1]}
-					peopleCount={people.length}
-				/>
+		<PeopleContext.Provider
+			value={{
+				people: state.people,
+				addPerson: addPerson,
+			}}
+		>
+			<div className="container mt-4">
+				<div className="row">
+					<Form />
+					<PeopleList />
+					<NewestPerson />
+				</div>
 			</div>
-		</div>
+		</PeopleContext.Provider>
 	);
 };
 
