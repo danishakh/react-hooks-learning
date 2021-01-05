@@ -1,31 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useRef } from "react";
 import PeopleContext from "../context/peopleContext";
+import { useForm } from "../hooks";
 
 const Form = () => {
-	const [person, setPerson] = useState({ firstName: "", lastName: "" });
 	const context = useContext(PeopleContext);
 
-	const changeHandler = (e) => {
-		setPerson({ ...person, [e.target.name]: e.target.value });
+	const validateForm = (values) => {
+		let errors = {};
+		if (values.firstName.trim() === "") {
+			errors.firstName = "First Name is required";
+		}
+		if (values.lastName.trim() === "") {
+			errors.lastName = "Last Name is required";
+		}
+
+		return errors;
 	};
 
-	const submitHandler = (e) => {
-		e.preventDefault();
-
-		// basic validation...
-		if (person.firstName.trim() === "" || person.lastName.trim() === "") return;
-
-		const newPerson = {
-			firstName: person.firstName.trim(),
-			lastName: person.lastName.trim(),
-		};
-
+	const addPersonFromForm = () => {
 		// use the addPerson() function defined in App.js that does the call to setPerson()
-		context.addPerson(newPerson);
-
-		// reset the form
-		setPerson({ firstName: "", lastName: "" });
+		context.addPerson(values);
 	};
+
+	// lets use our custom form validation hook
+	const { values, errors, changeHandler, submitHandler } = useForm(
+		addPersonFromForm,
+		{ firstName: "", lastName: "" },
+		validateForm
+	);
 
 	return (
 		<div className="col">
@@ -35,22 +37,28 @@ const Form = () => {
 				<div className="form-group mt-2">
 					<input
 						type="text"
-						className="form-control"
+						className={`form-control ${errors.firstName && "is-invalid"}`}
 						name="firstName"
 						placeholder="First Name"
-						value={person.firstName}
+						value={values.firstName}
 						onChange={changeHandler}
 					/>
+					{errors.firstName && (
+						<div className="invalid-feedback">{errors.firstName}</div>
+					)}
 				</div>
 				<div className="form-group mt-2">
 					<input
 						type="text"
-						className="form-control"
+						className={`form-control ${errors.lastName && "is-invalid"}`}
 						name="lastName"
 						placeholder="Last Name"
-						value={person.lastName}
+						value={values.lastName}
 						onChange={changeHandler}
 					/>
+					{errors.lastName && (
+						<div className="invalid-feedback">{errors.lastName}</div>
+					)}
 				</div>
 				<button className="btn btn-success mt-2" type="submit">
 					Add
